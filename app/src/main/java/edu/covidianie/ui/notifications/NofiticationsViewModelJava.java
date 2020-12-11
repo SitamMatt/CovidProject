@@ -1,23 +1,28 @@
 package edu.covidianie.ui.notifications;
 
 import android.arch.lifecycle.ViewModel;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.content.res.Resources;
+import android.net.Uri;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Scanner;
 
 import edu.covidianie.R;
 
 public class NofiticationsViewModelJava extends ViewModel {
 
     List<List<Double>> result_value = new ArrayList<>();
+    private Resources appResources;
 
     List<String> getQuestionList()
     {
@@ -27,33 +32,33 @@ public class NofiticationsViewModelJava extends ViewModel {
     }
     HashMap<Integer, List<String>> getAnswers()
     {
+        result_value.clear();
+        HashMap<Integer,List<String>> result = new HashMap<Integer, List<String>>();
         String answers_data = "Odpowiedź 1a;Odpowiedź 1b;Odpowiedź 1c\n" +
                                 "Odpowiedź 2a;Odpowiedź 2b;Odpowiedź 2c\n" +
                                 "Odpowiedź 3a;Odpowiedź 3b;Odpowiedź 3c";
-        String[] answers = answers_data.split("\n");
-        int counter = 1;
-        HashMap<Integer,List<String>> result = new HashMap<Integer, List<String>>();
-        for(String row : answers){
-            result.put(counter,
-                    Arrays.asList(row.split(";")));
-            counter ++;
-        }
-        getAnswersValue();
-        return result;
-    }
-    void getAnswersValue(){
-        String value_data = "0.0;0.5;1.0\n" +
-                            "0.5;1.0;0.0\n" +
-                            "1.0;0.0;0.5\n";
-
-        for(String value_row : value_data.split("\n")){
-            List<Double> values = new ArrayList<>();
-            for(String value_str : value_row.split(";")){
-                values.add(Double.parseDouble(value_str));
+        List<List<String>> records = new ArrayList<>();
+        InputStream ins = appResources.openRawResource(R.raw.data);
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(ins, Charset.forName("UTF-8")));
+        String line = "";
+        try {
+            int key = 1;
+            while( (line = reader.readLine()) != null){
+                String[] data_set = line.split(";");
+                List<String> answers = new ArrayList<>(Arrays.asList(data_set).subList(0, data_set.length / 2));
+                result.put(key, answers);
+                key++;
+                List<Double> values_set = new ArrayList<>();
+                for(int i=data_set.length/2;i<data_set.length;i++){
+                    values_set.add(Double.parseDouble(data_set[i]));
+                }
+                result_value.add(values_set);
             }
-            result_value.add(values);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
+        return result;
     }
     Double calculate(List<Integer> answers_results)
     {
@@ -65,8 +70,18 @@ public class NofiticationsViewModelJava extends ViewModel {
         }
         return sum/counter;
     }
+    private List<String> getRecordFromLine(String line) {
+        List<String> values = new ArrayList<String>();
+        try (Scanner rowScanner = new Scanner(line)) {
+            rowScanner.useDelimiter(";");
+            while (rowScanner.hasNext()) {
+                values.add(rowScanner.next());
+            }
+        }
+        return values;
+    }
 
-
-
-    // TODO: Implement the ViewModel
+    public void setAppResources(Resources appResources) {
+        this.appResources = appResources;
+    }
 }

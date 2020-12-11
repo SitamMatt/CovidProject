@@ -48,17 +48,20 @@ public class NofiticationsFragmentJava extends Fragment {
         return inflater.inflate(R.layout.nofitications_fragment, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory()).get(NofiticationsViewModelJava.class);
         // TODO: Use the ViewModel
+        mViewModel.setAppResources(getResources());
         setupQuestions();
         submit_button.setOnClickListener(new SubmitListener());
 
     }
 
     //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     void setupQuestions() {
         LinearLayout questions = getView().findViewById(R.id.question_list_linear_layout);
         HashMap<Integer, List<String>> answers = mViewModel.getAnswers();
