@@ -8,6 +8,9 @@ import android.widget.TextView
 import android.support.v4.app.Fragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import edu.covidianie.R
 
 class DashboardFragment : Fragment() {
@@ -22,10 +25,15 @@ class DashboardFragment : Fragment() {
         dashboardViewModel =
                 ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DashboardViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+        val myWebView: WebView = root.findViewById<WebView>(R.id.webview)
+        myWebView.loadUrl("https://www.gov.pl/web/koronawirus/aktualne-zasady-i-ograniczenia")
+        val webSettings: WebSettings = myWebView.settings
+        webSettings.javaScriptEnabled = true
+
+        myWebView.webViewClient = WebViewClient()
+//        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
         return root
     }
 }
