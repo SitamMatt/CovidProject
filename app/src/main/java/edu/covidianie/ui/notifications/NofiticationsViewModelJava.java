@@ -2,11 +2,10 @@ package edu.covidianie.ui.notifications;
 
 import android.arch.lifecycle.ViewModel;
 import android.content.res.Resources;
-import android.net.Uri;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,25 +19,32 @@ import java.util.Scanner;
 import edu.covidianie.R;
 
 public class NofiticationsViewModelJava extends ViewModel {
-
+    static double ERROR_OF_MEASUREMENT = 0.85;
     List<List<Double>> result_value = new ArrayList<>();
     private Resources appResources;
 
     List<String> getQuestionList()
     {
-        String questions_data = "Treść pytania pierwszego;Treść pytania drugiego;Treść pytania trzeciego";
-        String[] questions = questions_data.split(";");
-        return Arrays.asList(questions);
+        InputStream ins = appResources.openRawResource(R.raw.questions_data);
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(ins, Charset.forName("UTF-8")));
+        ArrayList<String> questions = new ArrayList<>();
+        String line;
+        try{
+            while( (line = reader.readLine()) != null) {
+                questions.add(line);
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        return questions;
     }
     HashMap<Integer, List<String>> getAnswers()
     {
         result_value.clear();
         HashMap<Integer,List<String>> result = new HashMap<Integer, List<String>>();
-        String answers_data = "Odpowiedź 1a;Odpowiedź 1b;Odpowiedź 1c\n" +
-                                "Odpowiedź 2a;Odpowiedź 2b;Odpowiedź 2c\n" +
-                                "Odpowiedź 3a;Odpowiedź 3b;Odpowiedź 3c";
-        List<List<String>> records = new ArrayList<>();
-        InputStream ins = appResources.openRawResource(R.raw.data);
+        InputStream ins = appResources.openRawResource(R.raw.answers_data);
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(ins, Charset.forName("UTF-8")));
         String line = "";
@@ -60,7 +66,7 @@ public class NofiticationsViewModelJava extends ViewModel {
         }
         return result;
     }
-    Double calculate(List<Integer> answers_results)
+    Double calculate(@NotNull List<Integer> answers_results)
     {
         int counter = 0;
         double sum = 0.0;
@@ -68,17 +74,7 @@ public class NofiticationsViewModelJava extends ViewModel {
             sum += result_value.get(counter).get(i);
             counter++;
         }
-        return sum/counter;
-    }
-    private List<String> getRecordFromLine(String line) {
-        List<String> values = new ArrayList<String>();
-        try (Scanner rowScanner = new Scanner(line)) {
-            rowScanner.useDelimiter(";");
-            while (rowScanner.hasNext()) {
-                values.add(rowScanner.next());
-            }
-        }
-        return values;
+        return (sum/counter) * ERROR_OF_MEASUREMENT;
     }
 
     public void setAppResources(Resources appResources) {

@@ -31,12 +31,14 @@ public class NofiticationsFragmentJava extends Fragment {
     private List<Integer> radioGroupIDs;
     private Button submit_button;
     private boolean filled;
+    private TextView result;
 
 
     public static NofiticationsFragmentJava newInstance() {
         return new NofiticationsFragmentJava();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class NofiticationsFragmentJava extends Fragment {
         filled = false;
         submit_button = new Button(getContext());
         submit_button.setText(R.string.submit);
+        result = new TextView(getContext());
+        result.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         return inflater.inflate(R.layout.nofitications_fragment, container, false);
     }
 
@@ -98,7 +102,12 @@ public class NofiticationsFragmentJava extends Fragment {
             for(int id : radioGroupIDs){
                 answers.add(getSelectedRadioButton(id));
             }
-            submit_button.setText(mViewModel.calculate(answers).toString());
+            LinearLayout questions = getView().findViewById(R.id.question_list_linear_layout);
+            if(questions.getChildCount() > 0)
+                questions.removeAllViews();
+            String result_percent = String.valueOf(Math.round(mViewModel.calculate(answers) * 100));
+            result.setText(getResources().getString(R.string.result_title) + ' ' + result_percent + '%');
+            questions.addView(result);
             answers.clear();
         }
     }

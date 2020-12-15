@@ -10,4 +10,5 @@
         Witaj!\nOdpowiedz na poniższe pytania, aby poznać swój wynik.
     </string>
     <string name="submit">Submit</string>
+    <string name="result_title">Twoje prawdopodobieństwo zakażenia wynosi: </string>
 </resources>
