@@ -45,23 +45,6 @@ class HomeFragment : Fragment() {
             setupLayout(root)
         }
 
-        val pac = context?.packageManager?.getPackageInfo("com.glovo", 0)
-        val appctx = context?.createPackageContext("com.glovo", Context.CONTEXT_IGNORE_SECURITY)
-        appctx?.resources?.getDrawableForDensity(
-            pac?.applicationInfo?.icon!!,
-            DisplayMetrics.DENSITY_XXXHIGH
-        )
-
-
-//        viewLifecycleOwner.lifecycleScope.apply {
-//            val doc: Document = Jsoup.connect("https://en.wikipedia.org/").get()
-////            log(doc.title())
-//            val newsHeadlines: Elements = doc.select("#mp-itn b a")
-//            for (headline in newsHeadlines) {
-////                log("%s\n\t%s",
-////                        headline.attr("title"), headline.absUrl("href"))
-//            }
-//        }
         return root
     }
 
@@ -82,11 +65,11 @@ class HomeFragment : Fragment() {
         setupCard(pyszneCard, pysznePackageName)
         val uberCard = root.findViewById<CardView>(R.id.uber_eats_card)
         setupCard(uberCard, uberPackageName)
-        val dr = resources.getDrawable(R.drawable.glovo)
-        val bitmap = (dr as BitmapDrawable).bitmap
-        val d: Drawable = BitmapDrawable(resources, Bitmap.createScaledBitmap(bitmap, resources.displayMetrics.densityDpi, resources.displayMetrics.densityDpi, true))
+//        val dr = resources.getDrawable(R.drawable.glovo)
+//        val bitmap = (dr as BitmapDrawable).bitmap
+//        val d: Drawable = BitmapDrawable(resources, Bitmap.createScaledBitmap(bitmap, resources.displayMetrics.densityDpi, resources.displayMetrics.densityDpi, true))
         val glovoCard = root.findViewById<CardView>(R.id.glovo_card)
-        setupCard(glovoCard, glovoPackageName, d)
+        setupCard(glovoCard, glovoPackageName)
     }
 
     private fun setupCard(card: CardView, packageName: String) {
@@ -109,25 +92,25 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupCard(card: CardView, packageName: String, icon: Drawable) {
-        val context = context ?: return
-        val launchIntent: Intent? =
-            context.packageManager.getLaunchIntentForPackage(packageName)
-        if (launchIntent != null) {
-//            val icon = context.packageManager.getApplicationIcon(packageName)
-//            val drawable = ScaleDrawable(icon, 0, 64F, 64F).drawable
-//            drawable?.setBounds(0,0,64,64)
-//            val drawable = getIcon(context, packageName)
-            val imageView = card.findViewById<AppCompatImageView>(R.id.icon)
-            imageView.setImageDrawable(icon)
-            card.setOnClickListener { startActivity(launchIntent) }
-        } else {
-            card.setOnClickListener { launchGooglePlayApp(packageName) }
-            val drawable = resources.getDrawable(R.drawable.ic_baseline_not_interested_64)
-            val imageView = card.findViewById<AppCompatImageView>(R.id.icon)
-            imageView.setImageDrawable(drawable)
-        }
-    }
+//    private fun setupCard(card: CardView, packageName: String, icon: Drawable) {
+//        val context = context ?: return
+//        val launchIntent: Intent? =
+//            context.packageManager.getLaunchIntentForPackage(packageName)
+//        if (launchIntent != null) {
+////            val icon = context.packageManager.getApplicationIcon(packageName)
+////            val drawable = ScaleDrawable(icon, 0, 64F, 64F).drawable
+////            drawable?.setBounds(0,0,64,64)
+////            val drawable = getIcon(context, packageName)
+//            val imageView = card.findViewById<AppCompatImageView>(R.id.icon)
+//            imageView.setImageDrawable(icon)
+//            card.setOnClickListener { startActivity(launchIntent) }
+//        } else {
+//            card.setOnClickListener { launchGooglePlayApp(packageName) }
+//            val drawable = resources.getDrawable(R.drawable.ic_baseline_not_interested_64)
+//            val imageView = card.findViewById<AppCompatImageView>(R.id.icon)
+//            imageView.setImageDrawable(drawable)
+//        }
+//    }
 
     private fun launchGooglePlayApp(packageName: String) {
         startActivity(
