@@ -2,7 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.covidianie">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <queries>
+        <package android:name="com.yourdelivery.pyszne"/>
+        <package android:name="com.glovo"/>
+        <package android:name="com.ubercab.eats"/>
+    </queries>
+
 
     <application
         android:allowBackup="true"
