@@ -66,7 +66,6 @@ public class NotificationsFragmentJava extends Fragment {
 
     }
 
-    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     void setupQuestions() {
         LinearLayout questions = getView().findViewById(R.id.question_list_linear_layout);
