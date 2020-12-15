@@ -73,6 +73,7 @@ public class NofiticationsViewModelJava extends ViewModel {
         for(int i : answers_results){
             sum += result_value.get(counter).get(i);
             counter++;
+            //comment
         }
         return (sum/counter) * ERROR_OF_MEASUREMENT;
     }
