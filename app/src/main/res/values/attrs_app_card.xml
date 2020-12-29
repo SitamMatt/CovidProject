@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="AppCard">
+        <attr name="packageName" format="string" />
+        <attr name="appIconSize" format="integer" />
+    </declare-styleable>
+</resources>
