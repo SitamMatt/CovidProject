@@ -18,14 +18,14 @@ import edu.covidianie.utils.dpToPx
 import edu.covidianie.utils.rasterize
 
 class AppCard : CardView {
-    val ICON_SIZE_PIXELS = 64
+    private val iconSizePixels = 64
 
     private lateinit var textView: TextView
     private lateinit var imageView: ImageView
 
     private var alternativeText: String? = null
 
-    private var _iconSize: Int = ICON_SIZE_PIXELS
+    private var _iconSize: Int = iconSizePixels
     var iconSize: Int
         get() = _iconSize
         set(value) {
@@ -74,7 +74,7 @@ class AppCard : CardView {
 
         _iconSize = attributes.getDimensionPixelSize(
             R.styleable.AppCard_appIconSize,
-            dpToPx(context, ICON_SIZE_PIXELS)
+            dpToPx(context, iconSizePixels)
         )
 
         attributes.recycle()

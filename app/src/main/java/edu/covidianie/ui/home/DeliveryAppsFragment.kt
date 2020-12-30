@@ -15,9 +15,6 @@ import edu.covidianie.R
 class DeliveryAppsFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private val pysznePackageName = "com.yourdelivery.pyszne"
-    private val glovoPackageName = "com.glovo"
-    private val uberPackageName = "com.ubercab.eats"
 
     override fun onCreateView(
         inflater: LayoutInflater,
