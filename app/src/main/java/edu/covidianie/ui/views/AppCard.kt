@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
 import android.util.AttributeSet
@@ -15,13 +14,18 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat.startActivity
 import edu.covidianie.R
+import edu.covidianie.utils.dpToPx
 import edu.covidianie.utils.rasterize
 
 class AppCard : CardView {
+    val ICON_SIZE_PIXELS = 64
+
     private lateinit var textView: TextView
     private lateinit var imageView: ImageView
 
-    private var _iconSize: Int = 256
+    private var alternativeText: String? = null
+
+    private var _iconSize: Int = ICON_SIZE_PIXELS
     var iconSize: Int
         get() = _iconSize
         set(value) {
@@ -60,8 +64,17 @@ class AppCard : CardView {
             attrs, R.styleable.AppCard, defStyle, 0
         )
 
+        alternativeText = attributes.getString(
+            R.styleable.AppCard_alternativeText
+        )
+
         _packageName = attributes.getString(
             R.styleable.AppCard_packageName
+        )
+
+        _iconSize = attributes.getDimensionPixelSize(
+            R.styleable.AppCard_appIconSize,
+            dpToPx(context, ICON_SIZE_PIXELS)
         )
 
         attributes.recycle()
@@ -79,21 +92,23 @@ class AppCard : CardView {
                 rasterize(iconDrawable, it, _iconSize)
             }
             val name = context.packageManager.getApplicationLabel(info)
-            val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName) ?: return
+            val launchIntent =
+                context.packageManager.getLaunchIntentForPackage(packageName) ?: return
 
             textView.text = name
             imageView.setImageBitmap(icon)
-            setOnClickListener{ startActivity(context, launchIntent, null) }
+            setOnClickListener { startActivity(context, launchIntent, null) }
 
-        }catch (ex: PackageManager.NameNotFoundException){
-            val notFoundDrawable = resources.getDrawable(R.drawable.ic_baseline_not_interested_64, null)
+        } catch (ex: PackageManager.NameNotFoundException) {
+            val notFoundDrawable =
+                resources.getDrawable(R.drawable.ic_baseline_not_interested_64, null)
             imageView.setImageDrawable(notFoundDrawable)
-            textView.text = "$packageName"
+            textView.text = alternativeText ?: packageName
             val launchIntent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
             )
-            setOnClickListener{ startActivity(context, launchIntent, null)}
+            setOnClickListener { startActivity(context, launchIntent, null) }
         }
 
     }
