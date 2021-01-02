@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="edu.covidianie.ui.dashboard.DashboardFragment"
+        android:name="edu.covidianie.ui.dashboard.NewsFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_news" />
 
     <fragment
         android:id="@+id/navigation_notifications"
