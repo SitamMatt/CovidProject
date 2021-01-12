@@ -17,7 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.FragmentNavigator;
 
 import com.razerdp.widget.animatedpieview.AnimatedPieView;
 import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
@@ -86,12 +88,12 @@ public class NotificationsFragmentJava extends Fragment {
             TextView tv = new TextView(getContext());
             tv.setText(s);
             questions.addView(tv);
-            question_counter ++;
+            question_counter++;
             RadioGroup answers_set = new RadioGroup(getContext());
             answers_set.setId(View.generateViewId());
             answers_set.setOnCheckedChangeListener(answersFilledListener);
             radioGroupIDs.add(answers_set.getId());
-            for(String answer_text : answers.get(question_counter)){
+            for (String answer_text : answers.get(question_counter)) {
                 RadioButton answer = new RadioButton(getContext());
                 answer.setText(answer_text);
                 answers_set.addView(answer);
@@ -101,22 +103,23 @@ public class NotificationsFragmentJava extends Fragment {
         questions.addView(submit_button);
 
     }
-    int getSelectedRadioButton(int radio_group_id){
+
+    int getSelectedRadioButton(int radio_group_id) {
         RadioGroup rg = getView().findViewById(radio_group_id);
         return rg.indexOfChild(getView().findViewById(rg.getCheckedRadioButtonId()));
     }
-    void pieChartInvoke(long value)
-    {
+
+    void pieChartInvoke(long value) {
         AnimatedPieViewConfig config = new AnimatedPieViewConfig();
         int chartColor = Color.parseColor("#FF6df23d");
-        if(value > 30)
+        if (value > 30)
             chartColor = Color.parseColor("#FF2bc23f");
-        if(value > 50)
+        if (value > 50)
             chartColor = Color.parseColor("#FFe3c010");
-        if(value > 80)
+        if (value > 80)
             chartColor = Color.parseColor("#FFe34510");
-        config.addData(new SimplePieInfo(value, chartColor , String.valueOf(value) + "%" ));
-        config.addData(new SimplePieInfo(100-value, Color.parseColor("#20888888")));
+        config.addData(new SimplePieInfo(value, chartColor, String.valueOf(value) + "%"));
+        config.addData(new SimplePieInfo(100 - value, Color.parseColor("#20888888")));
         config.drawText(false);
         config.textSize(25);
         config.canTouch(false);
@@ -125,20 +128,21 @@ public class NotificationsFragmentJava extends Fragment {
         pieChart.start();
         pieChart.setVisibility(View.VISIBLE);
     }
+
     class SubmitListener implements View.OnClickListener {
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
         @Override
         public void onClick(View v) {
-            if(!filled)
+            if (!filled)
                 return;
-            for(int id : radioGroupIDs){
+            for (int id : radioGroupIDs) {
                 answers.add(getSelectedRadioButton(id));
             }
             LinearLayout questions = getView().findViewById(R.id.question_list_linear_layout);
-            if(questions.getChildCount() > 0)
+            if (questions.getChildCount() > 0)
                 questions.removeAllViews();
-            long result_percent =Math.round(mViewModel.calculate(answers) * 100);
+            long result_percent = Math.round(mViewModel.calculate(answers) * 100);
             result.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             result.setText(getResources().getString(R.string.result_title) + "\n" + String.valueOf(result_percent) + "%");
             questions.addView(result);
@@ -147,12 +151,14 @@ public class NotificationsFragmentJava extends Fragment {
             answers.clear();
         }
     }
-    class AnswersFilledListener implements RadioGroup.OnCheckedChangeListener{
-        private Set<Integer>  checkedRadioGroupIDs = new HashSet<>();
+
+    class AnswersFilledListener implements RadioGroup.OnCheckedChangeListener {
+        private Set<Integer> checkedRadioGroupIDs = new HashSet<>();
+
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             checkedRadioGroupIDs.add(group.getId());
-            if(checkedRadioGroupIDs.size() == radioGroupIDs.size())
+            if (checkedRadioGroupIDs.size() == radioGroupIDs.size())
                 filled = true;
         }
     }
