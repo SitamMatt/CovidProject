@@ -84,7 +84,6 @@ public class NotificationsFragmentJava extends Fragment {
         AnswersFilledListener answersFilledListener = new AnswersFilledListener();
         for (String s : mViewModel.getQuestionList()) {
             TextView tv = new TextView(getContext());
-            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tv.setText(s);
             questions.addView(tv);
             question_counter ++;
@@ -117,10 +116,11 @@ public class NotificationsFragmentJava extends Fragment {
         if(value > 80)
             chartColor = Color.parseColor("#FFe34510");
         config.addData(new SimplePieInfo(value, chartColor , String.valueOf(value) + "%" ));
-        config.addData(new SimplePieInfo(100-value, Color.parseColor("#00FFFFFF")));
+        config.addData(new SimplePieInfo(100-value, Color.parseColor("#20888888")));
         config.drawText(false);
         config.textSize(25);
-        config.duration(3000);
+        config.canTouch(false);
+        config.duration(2000);
         pieChart.applyConfig(config);
         pieChart.start();
         pieChart.setVisibility(View.VISIBLE);

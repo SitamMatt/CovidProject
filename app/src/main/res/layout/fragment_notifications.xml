@@ -13,7 +13,8 @@
         android:id="@+id/question_list_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <!--            <com.razerdp.widget.animatedpieview.AnimatedPieView-->
         <!--                android:id="@+id/animatedPieView"-->
