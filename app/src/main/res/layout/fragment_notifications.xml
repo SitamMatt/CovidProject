@@ -13,10 +13,11 @@
         android:padding="10dp">
 
         <edu.covidianie.ui.notifications.game.GameView
+            android:id="@+id/minigame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/back"
-            android:minHeight="200dp" />
+            android:minHeight="350dp" />
 
         <TextView
             android:id="@+id/not_Title_textview"

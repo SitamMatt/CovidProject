@@ -1,9 +1,11 @@
 package edu.covidianie.ui.notifications;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +31,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import edu.covidianie.R;
+import edu.covidianie.ui.notifications.game.GameView;
 
 public class NotificationsFragmentJava extends Fragment {
 
@@ -42,6 +46,8 @@ public class NotificationsFragmentJava extends Fragment {
     private boolean filled;
     private TextView result;
     private AnimatedPieView pieChart;
+
+    private Vibrator vibrator;
 
 
     public static NotificationsFragmentJava newInstance() {
@@ -72,7 +78,9 @@ public class NotificationsFragmentJava extends Fragment {
         mViewModel.setAppResources(getResources());
         setupQuestions();
         submit_button.setOnClickListener(new SubmitListener());
-
+        GameView gameView = getView().findViewById(R.id.minigame);
+        vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
+        gameView.setVibrator(vibrator);
     }
 
     //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)

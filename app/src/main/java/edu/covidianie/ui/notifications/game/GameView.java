@@ -5,6 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +27,12 @@ public class GameView extends View implements View.OnTouchListener{
     private boolean finished = false;
     Thread screenRefresher;
     private int points = 0;
+
+    public void setVibrator(Vibrator vibrator) {
+        this.vibrator = vibrator;
+    }
+
+    private Vibrator vibrator;
 
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
@@ -73,11 +82,12 @@ public class GameView extends View implements View.OnTouchListener{
         float touchY  = event.getY();
         for(Virus vir : virusList){
             boolean touched = true;
-            touched &= Math.abs(vir.position.x - touchX) < 15;
-            touched &= Math.abs(vir.position.y - touchY) < 15;
+            touched &= Math.abs(vir.position.x - touchX) < vir.size;
+            touched &= Math.abs(vir.position.y - touchY) < vir.size;
             if(touched){
                 virusList.remove(vir);
                 points ++;
+                vibrator.vibrate(50);
                 return true;
             }
         }
@@ -93,16 +103,16 @@ public class GameView extends View implements View.OnTouchListener{
         }
         if(finished) {
             paint.setColor(Color.parseColor("#FF6200EE"));
-            paint.setTextSize(25);
+            paint.setTextSize(getWidth()/25);
             canvas.drawText("You have catched: " + String.valueOf(points) + " viruses", 50, 50, paint);
         }
     }
     class Virus{
         Point position = new Point();
         int color;
-        float size = 15.0f;
-        double moveDistanceX = 0.02;
-        double moveDistanceY = 0.02;
+        float size = (float)getWidth() / 25;
+        double moveDistanceX = randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
+        double moveDistanceY = randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
         Thread init;
 
         public Virus() {
@@ -152,8 +162,8 @@ public class GameView extends View implements View.OnTouchListener{
             position.x += moveDistanceX;
             position.y += moveDistanceY;
             if(bounced) {
-                moveDistanceX += randomDouble(0.01, 0.02);
-                moveDistanceY += randomDouble(0.01, 0.02);
+                moveDistanceX += randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
+                moveDistanceY += randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
             }
         }
     }
