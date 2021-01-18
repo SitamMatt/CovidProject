@@ -5,18 +5,23 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import edu.covidianie.R;
 
 public class GameView extends View implements View.OnTouchListener{
 
@@ -95,15 +100,20 @@ public class GameView extends View implements View.OnTouchListener{
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onDraw(Canvas canvas) {
         for(Virus v : virusList) {
             paint.setColor(v.color);
+       //     Drawable d = getResources().getDrawable(R.drawable.ic_dashboard_black_24dp, null);
+         //   d.setBounds(0 + v.position.x,0 + v.position.y, (int)v.size + v.position.x,(int)v.size + v.position.y);
+          //  d.draw(canvas);
             canvas.drawCircle(v.position.x, v.position.y, v.size, paint);
         }
         if(finished) {
             paint.setColor(Color.parseColor("#FF6200EE"));
             paint.setTextSize(getWidth()/25);
+
             canvas.drawText("You have catched: " + String.valueOf(points) + " viruses", 50, 50, paint);
         }
     }
