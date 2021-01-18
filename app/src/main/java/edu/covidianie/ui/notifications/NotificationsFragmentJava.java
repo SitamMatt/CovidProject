@@ -83,7 +83,6 @@ public class NotificationsFragmentJava extends Fragment {
         gameView.setVibrator(vibrator);
     }
 
-    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     void setupQuestions() {
         TextView title = getView().findViewById(R.id.not_Title_textview);
