@@ -10,4 +10,6 @@
     </string>
     <string name="submit">Submit</string>
     <string name="result_title">Twoje prawdopodobieństwo zakażenia wynosi: </string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
