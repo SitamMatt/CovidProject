@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="edu.covidianie.ui.home.HomeFragment"
+        android:name="edu.covidianie.ui.home.DeliveryAppsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_delivery_apps" />
 
     <fragment
         android:id="@+id/navigation_dashboard"

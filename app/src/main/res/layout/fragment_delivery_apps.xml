@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    tools:context=".ui.home.DeliveryAppsFragment">
+
+    <edu.covidianie.ui.views.AppCard
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        app:alternativeText="Pyszne (install)"
+        app:appIconSize="64dp"
+        app:packageName="com.yourdelivery.pyszne" />
+
+    <edu.covidianie.ui.views.AppCard
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        app:alternativeText="Glovo (install)"
+        app:appIconSize="64dp"
+        app:packageName="com.glovo" />
+
+    <edu.covidianie.ui.views.AppCard
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        app:alternativeText="Uber Eats (install)"
+        app:appIconSize="64dp"
+        app:packageName="com.ubercab.eats" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

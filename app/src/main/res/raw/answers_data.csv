@@ -1,3 +1,6 @@
-Odpowiedź 1a;Odpowiedź 1b;Odpowiedź 1c;1.0;0.5;0.0
-Odpowiedź 2a;Odpowiedź 2b;Odpowiedź 2c;1.0;0.5;0.0
-Odpowiedź 3a;Odpowiedź 3b;Odpowiedź 3c;1.0;0.5;0.0
+Bardzo Wysoka (>40℃);Podniesiona (~37℃);W normie;1.0;0.5;0.0
+Poprawne;Suchy Kaszel;Trudności w oddychaniu;0.0;0.6;1.0
+OK;Senność zmęczenie;Spadek formy fizycznej;0.0;0.7;0.1
+Brak;Bóle migrenowe późną porą dnia;Sporadyczne bóle głowy;0.0;0.7;0.2
+Silny, częsty;Kilkukrotny;Nie występuje;1.0;0.6;0.0
+Długotrwały brak apetytu;Całkowita utrata smaku i węchu;Prawidłowy;0.5;0.8;0.0
