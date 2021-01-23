@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
@@ -21,13 +22,14 @@ import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
 class NewsFragment : Fragment() {
-    private val newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci";
+    private var pageCount = 1
+    private var newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci?page=$pageCount";
     private val rulesUrl = "https://www.gov.pl/web/koronawirus/aktualne-zasady-i-ograniczenia"
     private lateinit var articleList: ListView
     private lateinit var webTextView: TextView
+    private lateinit var nextArticlesBtn: Button
 
     private val articles = ArrayList<ArticleItem>()
-    private val articlesTitles = ArrayList<String>()
 
     private lateinit var dashboardViewModel: DashboardViewModel
 
@@ -44,22 +46,10 @@ class NewsFragment : Fragment() {
         //webTextView.movementMethod = LinkMovementMethod.getInstance()
 
         articleList = root.findViewById(R.id.article_list_view)
+        nextArticlesBtn = root.findViewById(R.id.getNextArticlesBtn)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val doc = Jsoup.connect(newsUrl).get()
-            val news = doc.select("div.art-prev > ul > li")
-
-            news?.forEach{
-                val title = it.selectFirst("div.title").text()
-                val intro = it.selectFirst("div.intro")?.text()
-                val url = it.selectFirst("> a").absUrl("href")
-                val imgUrl = it.selectFirst("> a > picture > img").absUrl("src")
-                val article = ArticleItem(
-                    title, intro, url, imgUrl
-                )
-                articles.add(article)
-                articlesTitles.add(title)
-            }
+            getArticlesFromUrl()
             val context = activity?.applicationContext
             articleList.setOnItemClickListener { _, _, position, _ ->
                 // 1
@@ -71,7 +61,6 @@ class NewsFragment : Fragment() {
                 // 3
                 startActivity(detailIntent)
             }
-            val adapter = context?.let { ArticleAdapter(it, articles) }
 //            val article = articles.first()
 //            val content = getArticleContent(article.url)
 //            if(content != null){
@@ -79,8 +68,12 @@ class NewsFragment : Fragment() {
 //                    webTextView.text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
 //                }
 //            }
-            lifecycleScope.launch(Dispatchers.Main){
-                articleList.adapter = adapter
+            nextArticlesBtn.setOnClickListener{
+                pageCount += 1
+                newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci?page=$pageCount"
+                lifecycleScope.launch(Dispatchers.IO) {
+                    getArticlesFromUrl()
+                }
             }
         }
         return root
@@ -92,5 +85,29 @@ class NewsFragment : Fragment() {
         // replace document body leaving only article content (removes ads, sidebars etc.)
         doc.body().html(content.html())
         return doc.html()
+    }
+
+    private fun getArticlesFromUrl() {
+        val doc = Jsoup.connect(newsUrl).get()
+        val news = doc.select("div.art-prev > ul > li")
+
+        news?.forEach{
+            val title = it.selectFirst("div.title").text()
+            val intro = it.selectFirst("div.intro")?.text()
+            val url = it.selectFirst("> a").absUrl("href")
+            val imgUrl = it.selectFirst("> a > picture > img").absUrl("src")
+            val article = ArticleItem(
+                title, intro, url, imgUrl
+            )
+            articles.add(article)
+        }
+        updateAdapter()
+    }
+
+    private fun updateAdapter(){
+        val adapter = context?.let { ArticleAdapter(it, articles) }
+        lifecycleScope.launch(Dispatchers.Main){
+            articleList.adapter = adapter
+        }
     }
 }
