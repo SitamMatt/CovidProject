@@ -48,19 +48,23 @@ class NewsFragment : Fragment() {
         articleList = root.findViewById(R.id.article_list_view)
         nextArticlesBtn = root.findViewById(R.id.getNextArticlesBtn)
 
+        val context = activity?.applicationContext
+        articleList.setOnItemClickListener { _, _, position, _ ->
+            val selectedArticle = articles[position]
+            val detailIntent = context?.let { ArticleViewActivity.newIntent(it, selectedArticle) }
+            startActivity(detailIntent)
+        }
+
+        nextArticlesBtn.setOnClickListener{
+            pageCount += 1
+            newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci?page=$pageCount"
+            lifecycleScope.launch(Dispatchers.IO) {
+                getArticlesFromUrl()
+            }
+        }
+
         lifecycleScope.launch(Dispatchers.IO) {
             getArticlesFromUrl()
-            val context = activity?.applicationContext
-            articleList.setOnItemClickListener { _, _, position, _ ->
-                // 1
-                val selectedRecipe = articles[position]
-
-                // 2
-                val detailIntent = context?.let { ArticleViewActivity.newIntent(it, selectedRecipe) }
-
-                // 3
-                startActivity(detailIntent)
-            }
 //            val article = articles.first()
 //            val content = getArticleContent(article.url)
 //            if(content != null){
@@ -68,13 +72,6 @@ class NewsFragment : Fragment() {
 //                    webTextView.text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
 //                }
 //            }
-            nextArticlesBtn.setOnClickListener{
-                pageCount += 1
-                newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci?page=$pageCount"
-                lifecycleScope.launch(Dispatchers.IO) {
-                    getArticlesFromUrl()
-                }
-            }
         }
         return root
     }
