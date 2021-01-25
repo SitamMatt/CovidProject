@@ -22,4 +22,10 @@
         android:name="edu.covidianie.ui.notifications.NotificationsFragmentJava"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_restrictions"
+        android:name="edu.covidianie.ui.restrictions.RestrictionsFragment"
+        android:label="Restrictions"
+        tools:layout="@layout/restrictions_fragment" />
 </navigation>

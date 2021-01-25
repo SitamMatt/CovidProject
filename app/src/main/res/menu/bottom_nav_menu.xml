@@ -12,6 +12,10 @@
         android:title="Aktualności" />
 
     <item
+        android:id="@+id/navigation_restrictions"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Obostrzenia" />
+    <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_baseline_favorite_24"
         android:title="Diagnoza" />
