@@ -24,9 +24,7 @@ import org.jsoup.Jsoup
 class NewsFragment : Fragment() {
     private var pageCount = 1
     private var newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci?page=$pageCount";
-    private val rulesUrl = "https://www.gov.pl/web/koronawirus/aktualne-zasady-i-ograniczenia"
     private lateinit var articleList: ListView
-    private lateinit var webTextView: TextView
     private lateinit var nextArticlesBtn: Button
 
     private val articles = ArrayList<ArticleItem>()
@@ -65,23 +63,8 @@ class NewsFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             getArticlesFromUrl()
-//            val article = articles.first()
-//            val content = getArticleContent(article.url)
-//            if(content != null){
-//                lifecycleScope.launch(Dispatchers.Main) {
-//                    webTextView.text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
-//                }
-//            }
         }
         return root
-    }
-
-    private fun getArticleContent(url: String): String? {
-        val doc = Jsoup.connect(url).get()
-        val content = doc.selectFirst("article#main-content > div.editor-content")
-        // replace document body leaving only article content (removes ads, sidebars etc.)
-        doc.body().html(content.html())
-        return doc.html()
     }
 
     private fun getArticlesFromUrl() {

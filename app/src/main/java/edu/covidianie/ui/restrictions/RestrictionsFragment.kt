@@ -6,13 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import androidx.lifecycle.lifecycleScope
 import edu.covidianie.R
+import edu.covidianie.ui.dashboard.DashboardViewModel
+import edu.covidianie.utils.extractArticleContent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RestrictionsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = RestrictionsFragment()
-    }
+    private val rulesUrl = "https://www.gov.pl/web/koronawirus/aktualne-zasady-i-ograniczenia"
+    private val baseUrl = "https://www.gov.pl"
+    private lateinit var webTextView: WebView
 
     private lateinit var viewModel: RestrictionsViewModel
 
@@ -20,13 +26,23 @@ class RestrictionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.restrictions_fragment, container, false)
-    }
+        viewModel =
+            ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(RestrictionsViewModel::class.java)
+        val root = inflater.inflate(R.layout.restrictions_fragment, container, false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(RestrictionsViewModel::class.java)
-        // TODO: Use the ViewModel
+        webTextView = root.findViewById(R.id.restrView)
+
+        lifecycleScope.launch(Dispatchers.IO){
+            val html = extractArticleContent(rulesUrl)
+
+            lifecycleScope.launch(Dispatchers.Main){
+                if (html != null) {
+                    webTextView.loadDataWithBaseURL(baseUrl, html, "text/html", "UTF-8", null)
+                }
+            }
+        }
+
+        return root
     }
 
 }

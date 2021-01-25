@@ -5,9 +5,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebView
+import androidx.lifecycle.lifecycleScope
 import edu.covidianie.model.ArticleItem
+import edu.covidianie.utils.extractArticleContent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ArticleViewActivity : AppCompatActivity() {
+    private var baseUrl: String = "https://www.gov.pl"
     private lateinit var webView: WebView
 
     companion object {
@@ -32,8 +37,15 @@ class ArticleViewActivity : AppCompatActivity() {
         val url = intent.extras?.getString(EXTRA_URL)
 
         webView = findViewById(R.id.detail_web_view)
-        if (url != null) {
-            webView.loadUrl(url)
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (url != null) {
+                val html = extractArticleContent(url)
+                lifecycleScope.launch(Dispatchers.Main) {
+                    if (html != null) {
+                        webView.loadDataWithBaseURL(baseUrl, html, "text/html", "UTF-8", null)
+                    }
+                }
+            }
         }
     }
 }
