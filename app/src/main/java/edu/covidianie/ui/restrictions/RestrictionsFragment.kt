@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -31,6 +32,8 @@ class RestrictionsFragment : Fragment() {
         val root = inflater.inflate(R.layout.restrictions_fragment, container, false)
 
         webTextView = root.findViewById(R.id.restrView)
+        webTextView.isScrollContainer = false
+        webTextView.setOnTouchListener(View.OnTouchListener { _, event -> return@OnTouchListener (event.action == MotionEvent.ACTION_MOVE); })
 
         lifecycleScope.launch(Dispatchers.IO){
             val html = extractArticleContent(rulesUrl)
