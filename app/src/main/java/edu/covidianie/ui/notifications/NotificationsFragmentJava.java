@@ -39,14 +39,15 @@ import edu.covidianie.ui.notifications.game.GameView;
 
 public class NotificationsFragmentJava extends Fragment {
 
-    private NotificationsViewModelJava mViewModel;
-    private List<Integer> answers;
-    private List<Integer> radioGroupIDs;
-    private Button submit_button;
-    private boolean filled;
+    //    private List<Integer> answers;
+//    private List<Integer> radioGroupIDs;
+//    private boolean filled;
     private TextView result;
+    private NotificationsViewModelJava mViewModel;
+    private Button submit_button;
     private AnimatedPieView pieChart;
-
+    private GameView gameView;
+    private Button start_game_button;
     private Vibrator vibrator;
 
 
@@ -58,9 +59,9 @@ public class NotificationsFragmentJava extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        answers = new ArrayList<>();
-        radioGroupIDs = new ArrayList<>();
-        filled = false;
+//        answers = new ArrayList<>();
+//        radioGroupIDs = new ArrayList<>();
+//        filled = false;
         submit_button = new Button(getContext());
         submit_button.setText(R.string.submit);
         result = new TextView(getContext());
@@ -78,9 +79,9 @@ public class NotificationsFragmentJava extends Fragment {
         mViewModel.setAppResources(getResources());
         setupQuestions();
         submit_button.setOnClickListener(new SubmitListener());
-        GameView gameView = getView().findViewById(R.id.minigame);
+//        GameView gameView = getView().findViewById(R.id.minigame);
         vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
-        gameView.setVibrator(vibrator);
+//        gameView.setVibrator(vibrator);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -156,6 +157,20 @@ public class NotificationsFragmentJava extends Fragment {
             pieChartInvoke(result_percent);
             questions.addView(pieChart);
             answers.clear();
+            start_game_button = new Button(getContext());
+            start_game_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (questions.getChildCount() > 0)
+                    questions.removeAllViews();
+                    gameView = new GameView(getContext(), null);
+                    gameView.setMinimumHeight(350);
+                    gameView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    gameView.setVibrator(vibrator);
+                    questions.addView(gameView);
+                }
+            });
+            questions.addView(start_game_button);
         }
     }
 
