@@ -61,11 +61,11 @@ class NewsFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 getArticlesFromUrl()
                 val currentPos = articleList.firstVisiblePosition
-                articleList.post(Runnable(){
-                run() {
-                    articleList.setSelection(currentPos)
+                articleList.post {
+                    run {
+                        articleList.setSelection(currentPos)
+                    }
                 }
-            })
             }
         }
 
