@@ -67,7 +67,9 @@ public class GameView extends View implements View.OnTouchListener{
                             int g = rand.nextInt(255);
                             int b = rand.nextInt(255);
                            tmpTimeStamp = System.currentTimeMillis();
-                           virusList.add(new Virus(Color.rgb(r,g,b)));
+                           synchronized (virusList) {
+                               virusList.add(new Virus(Color.rgb(r, g, b)));
+                           }
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -103,26 +105,29 @@ public class GameView extends View implements View.OnTouchListener{
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onDraw(Canvas canvas) {
-        for(Virus v : virusList) {
-            paint.setColor(v.color);
-       //     Drawable d = getResources().getDrawable(R.drawable.ic_dashboard_black_24dp, null);
-         //   d.setBounds(0 + v.position.x,0 + v.position.y, (int)v.size + v.position.x,(int)v.size + v.position.y);
-          //  d.draw(canvas);
-            canvas.drawCircle(v.position.x, v.position.y, v.size, paint);
-        }
-        if(finished) {
-            paint.setColor(Color.parseColor("#FF6200EE"));
-            paint.setTextSize(getWidth()/25);
+        synchronized (virusList) {
+            for (Virus v : virusList) {
+                paint.setColor(v.color);
+                Drawable d = getResources().getDrawable(R.drawable.covid_blank, null);
+                d.setBounds(v.position.x - (int) v.size, v.position.y - (int) v.size, (int) v.size + v.position.x, (int) v.size + v.position.y);
+                d.draw(canvas);
 
-            canvas.drawText("You have catched: " + String.valueOf(points) + " viruses", 50, 50, paint);
+                //canvas.drawCircle(v.position.x, v.position.y, v.size, paint);
+            }
+            if (finished) {
+                paint.setColor(Color.parseColor("#FF6200EE"));
+                paint.setTextSize(getWidth() / 15);
+
+                canvas.drawText("Ilość złapanych wirusów: " + String.valueOf(points), 50, 50, paint);
+            }
         }
     }
     class Virus{
         Point position = new Point();
         int color;
-        float size = (float)getWidth() / 25;
-        double moveDistanceX = randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
-        double moveDistanceY = randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
+        float size = (float)getWidth() / 15;
+        double moveDistanceX = randomDouble((float)getWidth()/8000, (float)getWidth()/100);
+        double moveDistanceY = randomDouble((float)getWidth()/8000, (float)getWidth()/100);
         Thread init;
 
         public Virus() {
@@ -133,10 +138,8 @@ public class GameView extends View implements View.OnTouchListener{
                 @Override
                 public void run() {
                     while (true) {
-
-
                     try {
-                        sleep(4);
+                        sleep(6);
                         move();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -151,29 +154,32 @@ public class GameView extends View implements View.OnTouchListener{
             this.color = color;
         }
 
-        void move(){
-            boolean bounced = false;
-            if(position.x < 14) {
-                moveDistanceX = Math.abs(moveDistanceX);;
-                bounced = true;
-            }
-            if(position.y < 14) {
-                moveDistanceY = Math.abs(moveDistanceY);
-                bounced = true;
-            }
-            if(position.x >getWidth()-14) {
-                moveDistanceX = -1 * Math.abs(moveDistanceX);
-                bounced = true;
-            }
-            if(position.y >getHeight()-14) {
-                moveDistanceY = -1 * Math.abs(moveDistanceY);
-                bounced = true;
-            }
-            position.x += moveDistanceX;
-            position.y += moveDistanceY;
-            if(bounced) {
-                moveDistanceX += randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
-                moveDistanceY += randomDouble((float)getWidth()/10000, (float)getWidth()/1000);
+        void move() {
+            synchronized (this) {
+                boolean bounced = false;
+                if (position.x < 14) {
+                    moveDistanceX = Math.abs(moveDistanceX);
+                    ;
+                    bounced = true;
+                }
+                if (position.y < 14) {
+                    moveDistanceY = Math.abs(moveDistanceY);
+                    bounced = true;
+                }
+                if (position.x > getWidth() - 14) {
+                    moveDistanceX = -1 * Math.abs(moveDistanceX);
+                    bounced = true;
+                }
+                if (position.y > getHeight() - 14) {
+                    moveDistanceY = -1 * Math.abs(moveDistanceY);
+                    bounced = true;
+                }
+                position.x += moveDistanceX;
+                position.y += moveDistanceY;
+                if (bounced) {
+                    moveDistanceX += randomDouble((float) getWidth() / 10000, (float) getWidth() / 1000);
+                    moveDistanceY += randomDouble((float) getWidth() / 10000, (float) getWidth() / 1000);
+                }
             }
         }
     }

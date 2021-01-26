@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.notifications.NotificationsFragmentJava">
+
     <LinearLayout
         android:id="@+id/question_list_linear_layout"
-        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp">
 
-        <edu.covidianie.ui.notifications.game.GameView
-            android:id="@+id/minigame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back"
-            android:minHeight="350dp" />
 
         <TextView
             android:id="@+id/not_Title_textview"
@@ -31,6 +26,3 @@
 
     </LinearLayout>
 </ScrollView>
-
-<!--
-</FrameLayout>-->

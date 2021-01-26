@@ -8,8 +8,9 @@
     <string name="notification_title">
         Witaj!\nOdpowiedz na poniższe pytania, aby poznać swój wynik.
     </string>
-    <string name="submit">Submit</string>
+    <string name="submit">Zatwierdź</string>
     <string name="result_title">Twoje prawdopodobieństwo zakażenia wynosi: </string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="play_mini_game">Zagraj w mini-grę</string>
 </resources>

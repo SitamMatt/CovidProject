@@ -23,6 +23,7 @@ public class NotificationsViewModelJava extends ViewModel {
     List<List<Double>> result_value = new ArrayList<>();
     private Resources appResources;
 
+
     List<String> getQuestionList()
     {
         InputStream ins = appResources.openRawResource(R.raw.questions_data);
