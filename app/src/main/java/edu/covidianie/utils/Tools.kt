@@ -29,5 +29,6 @@ fun extractArticleContent(url: String): String? {
     val doc = Jsoup.connect(url).get()
     val content = doc.selectFirst("article#main-content")
     doc.body().html(content.outerHtml())
+    doc.body().attr("style", "padding:20px;")
     return doc.html()
 }
