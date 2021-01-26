@@ -7,18 +7,21 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.work.WorkInfo
 import edu.covidianie.ArticleViewActivity
 import edu.covidianie.R
 import edu.covidianie.model.ArticleAdapter
 import edu.covidianie.model.ArticleItem
+import fr.dasilvacampos.network.monitoring.ConnectivityStateHolder
+import fr.dasilvacampos.network.monitoring.Event
+import fr.dasilvacampos.network.monitoring.NetworkEvents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
@@ -32,6 +35,10 @@ class NewsFragment : Fragment() {
     private val articles = ArrayList<ArticleItem>()
 
     private lateinit var dashboardViewModel: DashboardViewModel
+
+    private lateinit var workerData: LiveData<WorkInfo>;
+
+    private lateinit var networkObserver: Observer<Event>
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -48,6 +55,11 @@ class NewsFragment : Fragment() {
         articleList = root.findViewById(R.id.article_list_view)
         nextArticlesBtn = root.findViewById(R.id.getNextArticlesBtn)
 
+        networkObserver = Observer {
+            if (it is Event.ConnectivityEvent)
+                handleConnectivityChange()
+        }
+
         val context = activity?.applicationContext
         articleList.setOnItemClickListener { _, _, position, _ ->
             val selectedArticle = articles[position]
@@ -59,7 +71,7 @@ class NewsFragment : Fragment() {
             pageCount += 1
             newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci?page=$pageCount"
             lifecycleScope.launch(Dispatchers.IO) {
-                getArticlesFromUrl()
+                loadArticles()
                 val currentPos = articleList.firstVisiblePosition
                 articleList.post {
                     run {
@@ -70,9 +82,27 @@ class NewsFragment : Fragment() {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            getArticlesFromUrl()
+            loadArticles()
         }
+
         return root
+    }
+
+    private fun handleConnectivityChange() {
+        if (ConnectivityStateHolder.isConnected) {
+            Toast.makeText(context, "Przywrócono połączenie", Toast.LENGTH_LONG).show()
+            lifecycleScope.launch(Dispatchers.IO) { getArticlesFromUrl() }
+            NetworkEvents.removeObserver(networkObserver)
+        }
+    }
+
+    private fun loadArticles(){
+        if(!ConnectivityStateHolder.isConnected){
+            lifecycleScope.launch(Dispatchers.Main) {
+                NetworkEvents.observe(this@NewsFragment, networkObserver)
+            }
+        }
+        else getArticlesFromUrl()
     }
 
     private fun getArticlesFromUrl() {

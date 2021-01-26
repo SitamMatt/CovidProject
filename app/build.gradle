@@ -62,4 +62,7 @@ dependencies {
 
     implementation 'com.github.duanhong169:drawabletoolbox:1.0.7'
 
+    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha08"
+
+    implementation 'com.github.anis-campos:network-connectivity-check:master-SNAPSHOT'
 }
