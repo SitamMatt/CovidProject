@@ -1,14 +1,8 @@
 package edu.covidianie.ui.notifications;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.lifecycle.ViewModel;
-
-import com.razerdp.widget.animatedpieview.AnimatedPieView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,17 +21,8 @@ import edu.covidianie.R;
 public class NotificationsViewModelJava extends ViewModel {
     static double ERROR_OF_MEASUREMENT = 0.85;
     List<List<Double>> result_value = new ArrayList<>();
-    private List<Integer> answers;
-    private List<Integer> radioGroupIDs;
-    private boolean filled;
     private Resources appResources;
 
-
-    public NotificationsViewModelJava() {
-        answers = new ArrayList<>();
-        radioGroupIDs = new ArrayList<>();
-        filled = false;
-    }
 
     List<String> getQuestionList()
     {

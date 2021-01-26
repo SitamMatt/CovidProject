@@ -112,9 +112,9 @@ public class GameView extends View implements View.OnTouchListener{
         }
         if(finished) {
             paint.setColor(Color.parseColor("#FF6200EE"));
-            paint.setTextSize(getWidth()/25);
+            paint.setTextSize(getWidth()/15);
 
-            canvas.drawText("You have catched: " + String.valueOf(points) + " viruses", 50, 50, paint);
+            canvas.drawText("Ilość złapanych wirusów: " + String.valueOf(points), 50, 50, paint);
         }
     }
     class Virus{
@@ -136,7 +136,7 @@ public class GameView extends View implements View.OnTouchListener{
 
 
                     try {
-                        sleep(4);
+                        sleep(6);
                         move();
                     } catch (InterruptedException e) {
                         e.printStackTrace();

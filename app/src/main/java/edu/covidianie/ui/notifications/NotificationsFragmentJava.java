@@ -39,15 +39,16 @@ import edu.covidianie.ui.notifications.game.GameView;
 
 public class NotificationsFragmentJava extends Fragment {
 
-    //    private List<Integer> answers;
-//    private List<Integer> radioGroupIDs;
-//    private boolean filled;
-    private TextView result;
     private NotificationsViewModelJava mViewModel;
+    private List<Integer> answers;
+    private List<Integer> radioGroupIDs;
     private Button submit_button;
+    private boolean filled;
+    private TextView result;
     private AnimatedPieView pieChart;
     private GameView gameView;
     private Button start_game_button;
+
     private Vibrator vibrator;
 
 
@@ -59,9 +60,9 @@ public class NotificationsFragmentJava extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-//        answers = new ArrayList<>();
-//        radioGroupIDs = new ArrayList<>();
-//        filled = false;
+        answers = new ArrayList<>();
+        radioGroupIDs = new ArrayList<>();
+        filled = false;
         submit_button = new Button(getContext());
         submit_button.setText(R.string.submit);
         result = new TextView(getContext());
@@ -79,9 +80,7 @@ public class NotificationsFragmentJava extends Fragment {
         mViewModel.setAppResources(getResources());
         setupQuestions();
         submit_button.setOnClickListener(new SubmitListener());
-//        GameView gameView = getView().findViewById(R.id.minigame);
         vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
-//        gameView.setVibrator(vibrator);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -93,20 +92,27 @@ public class NotificationsFragmentJava extends Fragment {
         int question_counter = 0;
         AnswersFilledListener answersFilledListener = new AnswersFilledListener();
         for (String s : mViewModel.getQuestionList()) {
-            TextView tv = new TextView(getContext());
+            TextView tv = (TextView)getLayoutInflater().inflate(R.layout.question_template, null);
             tv.setText(s);
+
             questions.addView(tv);
             question_counter++;
-            RadioGroup answers_set = new RadioGroup(getContext());
+            RadioGroup answers_set = (RadioGroup)getLayoutInflater().inflate(R.layout.answers_set_template,null);
             answers_set.setId(View.generateViewId());
             answers_set.setOnCheckedChangeListener(answersFilledListener);
             radioGroupIDs.add(answers_set.getId());
             for (String answer_text : answers.get(question_counter)) {
-                RadioButton answer = new RadioButton(getContext());
+                RadioButton answer = (RadioButton)getLayoutInflater().inflate(R.layout.answer_template,null);
+//                answer.setScaleX(0.5f);
+//                answer.setScaleY(0.5f);
                 answer.setText(answer_text);
+//                answer.setTextSize(26);
                 answers_set.addView(answer);
             }
             questions.addView(answers_set);
+//            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)answers_set.getLayoutParams();
+//            params.setMargins(30, 0, 0, 0); //substitute parameters for left, top, right, bottom
+//            answers_set.setLayoutParams(params);
         }
         questions.addView(submit_button);
 
@@ -158,14 +164,15 @@ public class NotificationsFragmentJava extends Fragment {
             questions.addView(pieChart);
             answers.clear();
             start_game_button = new Button(getContext());
+            start_game_button.setText(R.string.play_mini_game);
             start_game_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (questions.getChildCount() > 0)
                     questions.removeAllViews();
-                    gameView = new GameView(getContext(), null);
-                    gameView.setMinimumHeight(350);
-                    gameView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    gameView = (GameView)getLayoutInflater().inflate(R.layout.minigame_window_template,null);
+                   // gameView.setMinimumHeight(350);
+                    //gameView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     gameView.setVibrator(vibrator);
                     questions.addView(gameView);
                 }
