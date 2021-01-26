@@ -137,7 +137,7 @@ public class NotificationsFragmentJava extends Fragment {
         config.drawText(false);
         config.textSize(25);
         config.canTouch(false);
-        config.duration(2000);
+        config.duration(1000);
         pieChart.applyConfig(config);
         pieChart.start();
         pieChart.setVisibility(View.VISIBLE);
