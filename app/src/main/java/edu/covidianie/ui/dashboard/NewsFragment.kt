@@ -1,5 +1,7 @@
 package edu.covidianie.ui.dashboard
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -58,6 +60,12 @@ class NewsFragment : Fragment() {
             newsUrl = "https://www.gov.pl/web/koronawirus/wiadomosci?page=$pageCount"
             lifecycleScope.launch(Dispatchers.IO) {
                 getArticlesFromUrl()
+                val currentPos = articleList.firstVisiblePosition
+                articleList.post(Runnable(){
+                run() {
+                    articleList.setSelection(currentPos)
+                }
+            })
             }
         }
 
